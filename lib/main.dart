@@ -13,43 +13,48 @@ class Player extends StatefulWidget {
   const Player({Key? key}) : super(key: key);
   @override
   State<Player> createState() => AudioP();
-  }
+}
 
-  class AudioP extends State<Player>{
-    AudioPlayer audioPlayer = AudioPlayer();
-    Book book = Book.books[0];
-    //Book book = Get.arguments ?? Bokk.books[]; //use this to passs arguments from one page to another
-    @override
-    void initState(){
-      super.initState();
+class AudioP extends State<Player> {
+  AudioPlayer audioPlayer = AudioPlayer();
+  Book book = Book.books[0];
+  //Book book = Get.arguments ?? Bokk.books[]; //use this to passs arguments from one page to another
+  @override
+  void initState() {
+    super.initState();
 
-      audioPlayer.setAudioSource(
-        ConcatenatingAudioSource(
+    audioPlayer.setAudioSource(
+      ConcatenatingAudioSource(
         children: [
-        AudioSource.uri(Uri.parse('asset:///${book.url}'), //Insert audiofiles here
-        ),
+          AudioSource.uri(
+            Uri.parse('asset:///${book.url}'), //Insert audiofiles here
+          ),
         ],
       ),
-      );
+    );
+  }
 
-    }
-    @override
-    void dispose(){
-      audioPlayer.dispose();
-      super.dispose();
-    }
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
 
-    Stream<SeekBarData> get _seekBarDataStream => 
-    rxdart.Rx.combineLatest2<Duration, Duration?, SeekBarData>(
-      audioPlayer.positionStream,
-      audioPlayer.durationStream,
-      (Duration position, Duration? duration,){
-        return SeekBarData(position, duration ?? Duration.zero,);
+  Stream<SeekBarData> get _seekBarDataStream =>
+      rxdart.Rx.combineLatest2<Duration, Duration?, SeekBarData>(
+          audioPlayer.positionStream, audioPlayer.durationStream, (
+        Duration position,
+        Duration? duration,
+      ) {
+        return SeekBarData(
+          position,
+          duration ?? Duration.zero,
+        );
       });
   @override
   Widget build(BuildContext context) {
-     return MaterialApp(
-       home: Scaffold(
+    return MaterialApp(
+      home: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -59,13 +64,20 @@ class Player extends StatefulWidget {
           fit: StackFit.expand,
           children: [
             //use this line to add the book cover images to audioplayer
-            Image.asset(book.coverUrl, fit: BoxFit.cover,),
+            Image.asset(
+              book.coverUrl,
+              fit: BoxFit.cover,
+            ),
             const _BackgroundFilter(),
-            _BookPlayer(seekBarDataStream: _seekBarDataStream, audioPlayer: audioPlayer, book: book,),
+            _BookPlayer(
+              seekBarDataStream: _seekBarDataStream,
+              audioPlayer: audioPlayer,
+              book: book,
+            ),
           ],
         ),
-         ),
-     );
+      ),
+    );
   }
 }
 
@@ -75,8 +87,8 @@ class _BookPlayer extends StatelessWidget {
     required this.book,
     required Stream<SeekBarData> seekBarDataStream,
     required this.audioPlayer,
-  }) : _seekBarDataStream = seekBarDataStream,
-  super(key: key);
+  })  : _seekBarDataStream = seekBarDataStream,
+        super(key: key);
 
   final Book book;
   final Stream<SeekBarData> _seekBarDataStream;
@@ -93,74 +105,72 @@ class _BookPlayer extends StatelessWidget {
           Text(
             book.title,
             style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 10),
           Text(
             book.description,
             maxLines: 2,
             style: Theme.of(context)
-            .textTheme
-            .bodySmall!
-            .copyWith(color: Colors.white),
-
+                .textTheme
+                .bodySmall!
+                .copyWith(color: Colors.white),
           ),
           const SizedBox(height: 30),
           StreamBuilder<SeekBarData>(
-            stream: _seekBarDataStream,
-            builder: (context, snapshot){
-              final positionData = snapshot.data;
-              return SeekBar(
-              position: positionData?.duration ?? Duration.zero, 
-              duration: positionData?.duration ?? Duration.zero,
-              onChangedEnd: audioPlayer.seek,
-              );
-            }
-            ),
-            PlayerButtons(audioPlayer: audioPlayer),
+              stream: _seekBarDataStream,
+              builder: (context, snapshot) {
+                final positionData = snapshot.data;
+                return SeekBar(
+                  position: positionData?.position ?? Duration(seconds: 0),
+                  duration: positionData?.duration ?? Duration(seconds: 0),
+                  onChangedEnd: audioPlayer.seek,
+                );
+              }),
+          PlayerButtons(audioPlayer: audioPlayer),
         ],
       ),
     );
   }
 }
 
-
-
 class _BackgroundFilter extends StatelessWidget {
   const _BackgroundFilter({
     Key? key,
-  }) :super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ShaderMask(
-      shaderCallback: (rect){
+      shaderCallback: (rect) {
         return LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Colors.white,
-            Colors.white.withOpacity(0.5),
-            Colors.white.withOpacity(0.0),
-          ],
-          stops: const [0.0,0.4,0.6]
-        ).createShader(rect);
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white,
+              Colors.white.withOpacity(0.5),
+              Colors.white.withOpacity(0.0),
+            ],
+            stops: const [
+              0.0,
+              0.4,
+              0.6
+            ]).createShader(rect);
       },
       blendMode: BlendMode.dstOut,
-    child: Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
             Colors.deepPurple.shade200,
             Colors.deepPurple.shade800,
           ],
-        )
+        )),
       ),
-    ),
-      );
+    );
   }
 }
