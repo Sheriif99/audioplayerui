@@ -1,10 +1,10 @@
 # audioplayerui
 
-A new Flutter project.
+Book audioplayer page.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This page is a used for a Flutter application to enable users to listen to audiobooks.
 
 A few resources to get you started if this is your first Flutter project:
 
