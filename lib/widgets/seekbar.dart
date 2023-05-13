@@ -43,7 +43,8 @@ class _SeekBarState extends State<SeekBar>{
   Widget build(BuildContext context){
     return Row(
       children: [
-        Text(_formatDuration(widget.position)),
+        Text(_formatDuration(widget.position),
+        style: TextStyle(color: Colors.white),),
         Expanded(
           child: SliderTheme(
             data: SliderTheme.of(context).copyWith(
@@ -58,6 +59,7 @@ class _SeekBarState extends State<SeekBar>{
             activeTrackColor: Colors.white.withOpacity(0.2),
             inactiveTrackColor: Colors.white,
             overlayColor: Colors.white,
+            thumbColor: Colors.white,
           ),
           child: Slider(
             min: 0.0,
@@ -85,7 +87,8 @@ class _SeekBarState extends State<SeekBar>{
           ),
           ),
         ),
-        Text(_formatDuration(widget.duration)),
+        Text(_formatDuration(widget.duration),
+        style: TextStyle(color: Colors.white),),
       ],
     );
   }

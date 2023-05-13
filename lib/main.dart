@@ -6,7 +6,7 @@ import 'package:just_audio/just_audio.dart';
 import 'bookmodel/book_model.dart';
 
 void main() {
-  runApp(Player());
+  runApp(const Player());
 }
 
 class Player extends StatefulWidget {
