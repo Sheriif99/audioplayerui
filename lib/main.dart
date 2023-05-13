@@ -71,11 +71,12 @@ class Player extends StatefulWidget {
 
 class _BookPlayer extends StatelessWidget {
   const _BookPlayer({
-    super.key,
+    Key? key,
     required this.book,
     required Stream<SeekBarData> seekBarDataStream,
     required this.audioPlayer,
-  }) : _seekBarDataStream = seekBarDataStream;
+  }) : _seekBarDataStream = seekBarDataStream,
+  super(key: key);
 
   final Book book;
   final Stream<SeekBarData> _seekBarDataStream;
@@ -129,8 +130,8 @@ class _BookPlayer extends StatelessWidget {
 
 class _BackgroundFilter extends StatelessWidget {
   const _BackgroundFilter({
-    super.key,
-  });
+    Key? key,
+  }) :super(key: key);
 
   @override
   Widget build(BuildContext context) {
